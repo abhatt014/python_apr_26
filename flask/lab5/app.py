@@ -1,0 +1,17 @@
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    # This will look for 'index.html'
+    # in the 'templates' folder
+    return render_template('index.html',name="Ankit")
+@app.route('/tools')
+def tools():
+    # This will look for 'index.html'
+    # in the 'templates' folder
+    return render_template('tools.html')    
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0',port=5000,debug=True)
