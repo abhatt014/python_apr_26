@@ -43,6 +43,12 @@
                          {{error}}
                         </div>
                     {% endif %}
+                    {% if register_success %}
+                        <div class="alert alert-success" role="alert">
+                         {{register_success}}
+                        </div>
+                    {% endif %}
+                    
                     <div class="mb-3">
                         <label for="email" class="form-label">Email address</label>
                         <input type="email" class="form-control" id="email" name="email" required>

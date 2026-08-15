@@ -38,7 +38,7 @@
             <div class="card-body p-4">
                 <h3 class="text-center mb-4">Create an Account</h3>
                 
-                <form method="POST" action="/register">
+                <form method="POST" action="/processregister">
                     <div class="mb-3">
                         <label for="name" class="form-label">Full Name</label>
                         <input type="text" class="form-control" id="name" name="name" required>
@@ -50,6 +50,15 @@
                     <div class="mb-4">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="role" class="form-label">Role</label>
+                        <select class="form-select" id="role" name="role" aria-label="Default select example">
+                            <option selected>Open this select menu</option>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                            <option value="auditor">Auditor</option>
+                        </select>
                     </div>
                     <div class="d-grid">
                         <button type="submit" class="btn btn-success">Register</button>

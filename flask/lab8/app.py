@@ -40,6 +40,20 @@ def processlogin():
 def register():
     return render_template("register.html")    
 
+@app.route("/processregister",methods=['POST'])
+def processregister():
+    name= request.form.get('name')
+    email= request.form.get('email')
+    password=request.form.get('password')
+    role=request.form.get('role')
+
+    conn=get_db_connection()
+    cur=conn.cursor(dictionary=True)
+
+    query= "insert into users values (%s,%s,%s,%s);"
+    cur.execute(query,(name,email,password,role))
+    conn.commit()
+    return render_template("login.html",register_success="successfully registerd")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0",port=5000,debug=True)
