@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mb-4">Available Products</h2>
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <h3 class="text-primary">${{ product.price }}</h3>
+                <p class="text-muted">Stock available: 
+                    <span class="badge {% if product.stock > 0 %}bg-success{% else %}bg-danger{% endif %}">
+                        {{ product.stock }}
+                    </span>
+                </p>
+                
+                <form method="POST" action="{{ url_for('place_order', product_id=product.id) }}">
+                    <button type="submit" class="btn btn-success w-100" {% if product.stock <= 0 %}disabled{% endif %}>
+                        Buy Now
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

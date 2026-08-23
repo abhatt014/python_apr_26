@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    networks:
+      - ecomm_app
+    container_name: micro_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: ecommerce
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  user-service:
+    build: ./user_service
+    networks:
+      - ecomm_app
+    container_name: user_service
+    environment: &db_env
+      DB_HOST: db
+      DB_USER: appuser
+      DB_PASSWORD: apppassword
+      DB_NAME: ecommerce
+    depends_on:
+      db:
+        condition: service_healthy
+
+  product-service:
+    build: ./product_service
+    networks:
+      - ecomm_app    
+    container_name: product_service
+    environment: *db_env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  order-service:
+    build: ./order_service
+    networks:
+      - ecomm_app
+    container_name: order_service
+    environment: *db_env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend_service
+    networks:
+      - ecomm_app    
+    container_name: frontend_service
+    ports:
+      - "5000:5000"
+    depends_on:
+      - user-service
+      - product-service
+      - order-service
+
+volumes:
+  db_data:
+networks:
+  ecomm_app:
+    driver: bridge  

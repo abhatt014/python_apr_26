@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: ecommerce_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: ecommerce
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppassword
+    ports:
+      - "3306:3306"
+    volumes:
+      # Named volume for data persistence
+      - db_data:/var/lib/mysql
+      # Mount the init script to auto-seed the database
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    container_name: ecommerce_web
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      # These must match the db service configuration above
+      - DB_HOST=db
+      - DB_USER=appuser
+      - DB_PASSWORD=apppassword
+      - DB_NAME=ecommerce
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db_data:

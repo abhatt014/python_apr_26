@@ -1,0 +1,60 @@
+
+1. **Create a Docker Network:**
+docker network create ecommerce-network
+
+2. **Start the MySQL Container:**
+docker run -d \
+  --name ecommerce-db \
+  --network ecommerce-network \
+  -e MYSQL_ROOT_PASSWORD=rootpassword \
+  -e MYSQL_DATABASE=ecommerce \
+  -e MYSQL_USER=appuser \
+  -e MYSQL_PASSWORD=apppassword \
+  -v ecommerce-db-data:/var/lib/mysql \
+  -v $(pwd)/init.sql:/docker-entrypoint-initdb.d/init.sql \
+  -p 3306:3306 \
+  mysql:8.0
+
+
+3. **Build the Flask Application Image:**
+docker login -u username
+docker push username/repo:tag
+docker build -t username/repo:tag -t username/repo:latest .
+
+4. **Start the Flask Container:**
+
+docker run -d \
+  --name ecommerce-web \
+  --network ecommerce-network \
+  -e DB_HOST=ecommerce-db \
+  -e DB_USER=appuser \
+  -e DB_PASSWORD=apppassword \
+  -e DB_NAME=ecommerce \
+  -p 5001:5001 \
+  ecommerce-web-app
+
+--
+
+### How to Stop and Clean Up
+
+When you manage containers manually, you also have to tear them down manually.
+
+**To stop the app:**
+
+
+docker stop ecommerce-web ecommerce-db
+
+
+
+**To remove the containers (so you can run them again later):**
+
+
+docker rm ecommerce-web ecommerce-db
+
+
+
+**To wipe the database completely (destroy the volume):**
+
+
+docker volume rm ecommerce-db-data
+
