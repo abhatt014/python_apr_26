@@ -6,65 +6,27 @@
 
     <aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
       <div class="sidebar-header">
-        <a class="brand-mark" href="/products" aria-label="adminHMD dashboard">
+        <a class="brand-mark" href="index.html" aria-label="adminHMD dashboard">
           <span class="brand-icon"><i class="bi bi-grid-1x2-fill" aria-hidden="true"></i></span>
           <span class="brand-copy">
             <span class="brand-title">E-Commerce App</span>
-           
+
           </span>
         </a>
       </div>
 
       <nav class="sidebar-nav">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link active" href="/products">
           <span class="nav-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
-          <span class="nav-text">Dashboard</span>
+          <span class="nav-text">Products</span>
         </a>
-        <a class="nav-link" href="users.html">
+        <a class="nav-link " href="/orders" aria-current="page">
           <span class="nav-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
-          <span class="nav-text">Users</span>
+          <span class="nav-text">Orders</span>
         </a>
-        <a class="nav-link" href="add-user.html">
-          <span class="nav-icon"><i class="bi bi-person-plus" aria-hidden="true"></i></span>
-          <span class="nav-text">Add User</span>
-        </a>
-        <a class="nav-link" href="profile.html">
-          <span class="nav-icon"><i class="bi bi-person-badge" aria-hidden="true"></i></span>
-          <span class="nav-text">Profile</span>
-        </a>
-        <a class="nav-link" href="charts.html">
-          <span class="nav-icon"><i class="bi bi-bar-chart-line" aria-hidden="true"></i></span>
-          <span class="nav-text">Charts</span>
-        </a>
-        <a class="nav-link active" href="tables.html" aria-current="page">
-          <span class="nav-icon"><i class="bi bi-table" aria-hidden="true"></i></span>
-          <span class="nav-text">Tables</span>
-        </a>
-        <a class="nav-link" href="forms.html">
-          <span class="nav-icon"><i class="bi bi-ui-checks-grid" aria-hidden="true"></i></span>
-          <span class="nav-text">Forms</span>
-        </a>
-        <a class="nav-link" href="components.html">
-          <span class="nav-icon"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i></span>
-          <span class="nav-text">Components</span>
-        </a>
-        <a class="nav-link" href="alerts.html">
-          <span class="nav-icon"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i></span>
-          <span class="nav-text">Alerts</span>
-        </a>
-        <a class="nav-link" href="modals.html">
-          <span class="nav-icon"><i class="bi bi-window-stack" aria-hidden="true"></i></span>
-          <span class="nav-text">Modals</span>
-        </a>
-        <a class="nav-link" href="settings.html">
-          <span class="nav-icon"><i class="bi bi-gear" aria-hidden="true"></i></span>
-          <span class="nav-text">Settings</span>
-        </a>
-        <a class="nav-link" href="blank.html">
-          <span class="nav-icon"><i class="bi bi-file-earmark" aria-hidden="true"></i></span>
-          <span class="nav-text">Blank Page</span>
-        </a>
+
       </nav>
+
 
 
       <div class="sidebar-footer">
@@ -82,7 +44,9 @@
             <span></span>
           </button>
 
-   
+          <form class="d-none d-md-flex ms-3 flex-grow-1" role="search">
+            <input class="form-control search-input" type="search" placeholder="Search users, roles, teams" aria-label="Search">
+          </form>
 
           <div class="navbar-actions ms-auto">
             <button class="icon-button theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme" title="Switch color theme">
@@ -109,25 +73,38 @@
         <div class="container-fluid px-3 px-lg-4 py-4">
           <div class="page-heading">
             <div class="page-heading-copy">
-              <span class="page-icon"><i class="bi bi-table" aria-hidden="true"></i></span>
+              <span class="page-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
               <div>
-                <p class="eyebrow mb-1">Data</p>
-                <h1 class="h3 mb-1">Tables</h1>
-                <p class="text-muted mb-0">Use responsive, searchable tables for operational records.</p>
+                <p class="eyebrow mb-1">Products page</p>
+                <h1 class="h3 mb-1">All Products</h1>
+                
               </div>
             </div>
             
           </div>
+          
+          <section class="row g-3 mt-1" aria-label="User summary">
+            {% for product in products %}
+            <div class="col-12 col-sm-6 col-xl-3">
+              <article class="metric-card metric-primary">
+                  <h5 class="card-title">{{product.name}}</h5>
+                <h3 class="text-primary">${{product.price}}</h3>
+                <p class="text-muted">Stock available: 
+                    {{product.stock}}
+                </p>
+                  <form method="POST" action="/order/{{product.id}}">
+                    <button type="submit" class="btn btn-success w-100" >
+                        Buy Now
+                    </button>
+                </form>
+              </article>
+            </div>
 
-          <section class="panel">
-            <div class="panel-header"><div><h2 class="h5 mb-1 section-title"><i class="bi bi-table" aria-hidden="true"></i><span>Advanced Table</span></h2><p class="text-muted mb-0">Searchable responsive table for orders and customer data.</p></div><input class="form-control form-control-sm table-search" type="search" placeholder="Search orders" data-table-search="ordersTable" aria-label="Search orders"></div>
-            <div class="table-responsive"><table class="table align-middle mb-0" id="ordersTable" data-searchable-table><thead><tr><th>Order</th><th>Product</th><th>Customer</th><th>Status</th><th>Amount</th><th>Date</th><th class="text-end">Action</th></tr></thead><tbody>
-              <tr><td class="fw-semibold">#HMD-2048</td><td><div class="table-media"><img class="product-thumb" src="../assets/images/ecommerce/product-1.jpg" alt="Wireless Headset"><span>Wireless Headset</span></div></td><td>Sarah Ahmed</td><td><span class="badge text-bg-success">Paid</span></td><td>$1,240</td><td>May 6, 2026</td><td class="text-end"><button class="btn btn-light btn-sm" type="button">View</button></td></tr>
-              <tr><td class="fw-semibold">#HMD-2047</td><td><div class="table-media"><img class="product-thumb" src="../assets/images/ecommerce/product-2.jpg" alt="Smart Watch"><span>Smart Watch</span></div></td><td>Rafi Khan</td><td><span class="badge text-bg-warning">Pending</span></td><td>$860</td><td>May 5, 2026</td><td class="text-end"><button class="btn btn-light btn-sm" type="button">View</button></td></tr>
-              <tr><td class="fw-semibold">#HMD-2046</td><td><div class="table-media"><img class="product-thumb" src="../assets/images/ecommerce/product-3.jpg" alt="Desk Lamp"><span>Desk Lamp</span></div></td><td>Nadia Islam</td><td><span class="badge text-bg-info">Shipped</span></td><td>$430</td><td>May 3, 2026</td><td class="text-end"><button class="btn btn-light btn-sm" type="button">View</button></td></tr>
-              <tr><td class="fw-semibold">#HMD-2045</td><td><div class="table-media"><img class="product-thumb" src="../assets/images/ecommerce/product-4.jpg" alt="Travel Backpack"><span>Travel Backpack</span></div></td><td>Mina Torres</td><td><span class="badge text-bg-danger">Failed</span></td><td>$220</td><td>May 2, 2026</td><td class="text-end"><button class="btn btn-light btn-sm" type="button">View</button></td></tr>
-            </tbody></table></div>
+             {% endfor %}
           </section>
+         
+
+        
         </div>
       </main>
 

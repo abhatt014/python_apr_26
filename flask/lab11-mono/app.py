@@ -18,20 +18,24 @@ def home():
 @app.route('/login',methods=['GET','POST'])
 def login():
     if request.method == 'GET':
-        return render_template('login.html')
-    
-    email=request.form.get('email')
-    password=request.form.get('password')
-    db = get_db_connection()
-    cur = db.cursor(dictionary=True)
-    cur.execute("select * from users where email = %s and password = %s",(email,password))
-    user=cur.fetchone()
-    db.close()
-
-    if user:
-        session['user_id'] = user['id']
-        session['user_name'] = user['name']
-        return redirect(url_for('products')) 
+        if 'user_id' in session:
+            return redirect(url_for('products'))
+        else: 
+            return render_template('login.html')    
+    if request.method == 'POST':            
+        email=request.form.get('email')
+        password=request.form.get('password')
+        db = get_db_connection()
+        cur = db.cursor(dictionary=True)
+        cur.execute("select * from users where email = %s and password = %s",(email,password))
+        user=cur.fetchone()
+        db.close()
+        if user:
+            session['user_id'] = user['id']
+            session['user_name'] = user['name']
+            return redirect(url_for('products')) 
+        else:
+            return  render_template('login.html',error="invalid credentials")  
 
 
 @app.route('/register',methods=['GET','POST'])
@@ -39,12 +43,28 @@ def login():
 def register():
     if request.method == 'GET':
         return render_template('register.html')        
-#    if request.method == 'POST':    
+    if request.method == 'POST':
+        name= request.form.get('name')
+        email= request.form.get('email')
+        password=request.form.get('password')
+        conn=get_db_connection()
+        cur=conn.cursor(dictionary=True)
+        query= "insert into users (name,email,password) values (%s,%s,%s);"
+        cur.execute(query,(name,email,password))
+        conn.commit()
+        return render_template("login.html",register_success="successfully registerd")
+
 
 @app.route('/products')
 def products():
     if 'user_id' in session:
-        return render_template('products.html')
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM products")
+        products = cursor.fetchall()
+        cursor.close()
+        db.close()
+        return render_template('products.html',products=products)
     else:
         return redirect(url_for('login'))
 

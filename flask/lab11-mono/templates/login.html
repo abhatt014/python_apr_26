@@ -7,10 +7,20 @@
   </button>
   <main class="auth-page">
     <section class="auth-card">
-      <a class="auth-brand" href="index.html"><span class="brand-icon"><i class="bi bi-grid-1x2-fill"
+      <a class="auth-brand" href="/login"><span class="brand-icon"><i class="bi bi-grid-1x2-fill"
             aria-hidden="true"></i></span><span><strong>E-Commerce App</strong></span></a>
 
       <form action="/login" method="post" class="needs-validation" novalidate>
+        {% if error %} 
+          <div class="alert alert-danger" role="alert">
+              {{error}}
+          </div>
+        {% endif %}
+                {% if register_success %} 
+          <div class="alert alert-success" role="alert">
+              {{register_success}}
+          </div>
+        {% endif %}
           <div class="mb-4">
           <h1 class="h3 mb-1">Login</h1>
           
