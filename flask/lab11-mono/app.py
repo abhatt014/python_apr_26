@@ -64,10 +64,53 @@ def products():
         products = cursor.fetchall()
         cursor.close()
         db.close()
-        return render_template('products.html',products=products)
+        message = request.args.get('message')
+        return render_template('products.html',products=products,message=message if 'message' in request.args else None)
     else:
         return redirect(url_for('login'))
 
+@app.route('/order/<int:prod_id>', methods=['POST'])
+def order(prod_id):
+    if 'user_id'  not in session:
+        # Process the order for the given product ID
+        return redirect(url_for('login'),error="Please login to place an order")
+    else:
+        user_id = session['user_id']
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM products WHERE id = %s", (prod_id,))
+        product = cursor.fetchone()
+        if product:
+            # update the stock of the product
+            new_stock = product['stock'] - 1
+            cursor.execute("UPDATE products SET stock = %s WHERE id = %s", (new_stock, prod_id))
+
+            # Insert the order into the orders table
+            cursor.execute("INSERT INTO orders (user_id, product_id,total_price) VALUES (%s, %s,%s)", (user_id, prod_id, product['price']))
+            db.commit()
+
+            message = "Order placed successfully!"
+        else:
+            message = "Product not found."
+        cursor.close()
+        db.close()
+        return redirect(url_for('products', message=message))    
+
+@app.route('/orders')
+def orders():
+
+    #list all orders
+    if 'user_id' in session:
+        user_id = session['user_id']
+        db = get_db_connection()
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("SELECT o.id, p.name AS product_name, p.price AS product_price, o.total_price FROM orders o JOIN products p ON o.product_id = p.id WHERE o.user_id = %s", (user_id,))
+        orders = cursor.fetchall()
+        cursor.close()
+        db.close()
+        return render_template('orders.html', orders=orders)
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/logout')
 def logout():
