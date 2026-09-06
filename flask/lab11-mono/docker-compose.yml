@@ -13,7 +13,6 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-
   mono_app:
     build:
       context: ./
@@ -30,8 +29,6 @@ services:
       MYSQL_DATABASE: ecom_mono
       MYSQL_USER: appuser
       MYSQL_PASSWORD: apppassword
- 
-
 volumes:
   db_data:
 networks:
