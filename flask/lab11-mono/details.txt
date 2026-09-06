@@ -18,9 +18,15 @@ docker run -d \
   -v "$(pwd)/init.sql:/docker-entrypoint-initdb.d/init.sql" \
   mysql:8.0
 
-docker run -d \
-  --name mono_app \
-  --network ecomm_app \
-  --restart always \
--p 5001:5001 amitfreeze/april_mono:latest  
+docker run -d  \
+--name mono_app \
+--network ecomm_app \
+-e MYSQL_HOST=mysqldb\
+-e MYSQL_USER=appuser \
+-e MYSQL_PASSWORD=apppassword \
+-e MYSQL_DATABASE=ecom_mono \
+--restart always \
+-p 5001:5001 \
+amitfreeze/april_mono:latest  
+ 
  

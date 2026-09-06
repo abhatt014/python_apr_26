@@ -1,12 +1,17 @@
 from flask import Flask,render_template,request,redirect,url_for,session
 import mysql.connector
+import os
 
 app=Flask(__name__,static_folder='assets')
 app.secret_key = "SDFy3wegwsr34yta"
 
 ##db connection helper function
 def get_db_connection():
-    return mysql.connector.connect(host="mysqldb",user="appuser",password="apppassword",database="ecom_mono")
+    user = os.environ.get("MYSQL_USER")
+    password = os.environ.get("MYSQL_PASSWORD")
+    database = os.environ.get("MYSQL_DATABASE")
+    host = os.environ.get("MYSQL_HOST")
+    return mysql.connector.connect(host=host,user=user,password=password,database=database)
 ##route
 @app.route('/')
 def home():
