@@ -1,0 +1,26 @@
+docker login -u amitfreeze
+docker build -t  amitfreeze/april_mono:latest .
+docker push amitfreeze/april_mono:latest
+
+
+
+docker network create ecomm_app
+
+docker run -d \
+  --name mysqldb \
+  --network ecomm_app \
+  --restart always \
+  -e MYSQL_ROOT_PASSWORD=rootpassword \
+  -e MYSQL_DATABASE=ecom_mono \
+  -e MYSQL_USER=appuser \
+  -e MYSQL_PASSWORD=apppassword \
+  -v db_data:/var/lib/mysql \
+  -v "$(pwd)/init.sql:/docker-entrypoint-initdb.d/init.sql" \
+  mysql:8.0
+
+docker run -d \
+  --name mono_app \
+  --network ecomm_app \
+  --restart always \
+-p 5001:5001 amitfreeze/april_mono:latest  
+ 
