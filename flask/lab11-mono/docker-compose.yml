@@ -25,7 +25,7 @@ services:
     ports:
       - 5001:5001
     environment: 
-      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_HOST: mysqldb
       MYSQL_DATABASE: ecom_mono
       MYSQL_USER: appuser
       MYSQL_PASSWORD: apppassword
