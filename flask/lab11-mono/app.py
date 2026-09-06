@@ -6,7 +6,7 @@ app.secret_key = "SDFy3wegwsr34yta"
 
 ##db connection helper function
 def get_db_connection():
-    return mysql.connector.connect(host="localhost",user="appuser",password="apppassword",database="ecom_mono")
+    return mysql.connector.connect(host="mysqldb",user="appuser",password="apppassword",database="ecom_mono")
 ##route
 @app.route('/')
 def home():
