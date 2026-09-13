@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<body>
+    <div class="admin-shell">
+        <div class="sidebar-backdrop" data-sidebar-close></div>
+
+        <aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
+            <div class="sidebar-header">
+                <a class="brand-mark" href="index.html" aria-label="adminHMD dashboard">
+                    <span class="brand-icon"><i class="bi bi-grid-1x2-fill" aria-hidden="true"></i></span>
+                    <span class="brand-copy">
+                        <span class="brand-title">E-Commerce App</span>
+
+                    </span>
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a class="nav-link " href="/products">
+                    <span class="nav-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
+                    <span class="nav-text">Products</span>
+                </a>
+                <a class="nav-link active" href="/orders" aria-current="page">
+                    <span class="nav-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
+                    <span class="nav-text">Orders</span>
+                </a>
+
+            </nav>
+
+
+
+            <div class="sidebar-footer">
+                <span class="status-dot"></span>
+                <span class="sidebar-footer-text">System running smoothly</span>
+            </div>
+        </aside>
+
+        <div class="admin-main">
+            <nav class="navbar admin-navbar navbar-expand bg-white">
+                <div class="container-fluid px-3 px-lg-4">
+                    <button class="sidebar-toggle" type="button" data-sidebar-toggle aria-controls="adminSidebar"
+                        aria-expanded="true" aria-label="Toggle sidebar">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
+                    <form class="d-none d-md-flex ms-3 flex-grow-1" role="search">
+                        <input class="form-control search-input" type="search" placeholder="Search users, roles, teams"
+                            aria-label="Search">
+                    </form>
+
+                    <div class="navbar-actions ms-auto">
+                        <button class="icon-button theme-toggle" type="button" data-theme-toggle
+                            aria-label="Switch color theme" title="Switch color theme">
+                            <i class="bi bi-moon-stars" data-theme-icon aria-hidden="true"></i>
+                        </button>
+
+
+                        <div class="dropdown">
+                            <button class="profile-button dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <img class="avatar-img avatar-sm" src="../assets/images/avatar/avatar.jpg"
+                                    alt="Admin Hasan">
+                                <span class="profile-name d-none d-sm-inline">{{session['user_name']}}</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+
+
+                                <li><a class="dropdown-item" href="/logout">Sign out</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <main class="dashboard-content">
+                <div class="container-fluid px-3 px-lg-4 py-4">
+                    <div class="page-heading">
+                        <div class="page-heading-copy">
+                            <span class="page-icon"><i class="bi bi-table" aria-hidden="true"></i></span>
+                            <div>
+
+                                <h1 class="h3 mb-1">Orders</h1>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <section class="panel">
+
+                        <div class="table-responsive">
+                            {% if orders %}
+                            <table class="table align-middle mb-0" id="ordersTable" data-searchable-table>
+                                <thead>
+                                    <tr>
+                                        <th>Order # </th>
+                                        <th>Product Name</th>
+                                        <th>Product Price </th>
+                                        <th>Total Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in orders%}
+                                    <tr>
+                                        <td class="fw-semibold">#{{ order.id }}</td>
+                                        <td><span>{{ order.product_name }}</span></td>
+                                        <td>{{ order.product_price }}</td>
+                                        <td><span class="badge text-bg-success">{{ order.total_price }}</span></td>
+                                    </tr>
+                                    {% endfor %}        
+                                </tbody>
+                            </table>
+                            {% else %}
+                            <p>No orders found.</p>
+                            {% endif %}
+                        </div>
+                    </section>
+                </div>
+            </main>
+
+
+        </div>
+    </div>
+{%endblock%}
