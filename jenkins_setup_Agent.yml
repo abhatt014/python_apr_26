@@ -1,0 +1,12 @@
+---
+- name: Install required rpms on jenkins agent
+  hosts: agent1
+  become: true
+  tasks:
+    - name: install jenkins dep rpms
+      package:
+        name:
+          - fontconfig
+          - java-21-openjdk
+          - git
+        state: latest

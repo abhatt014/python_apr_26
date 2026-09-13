@@ -1,0 +1,33 @@
+---
+- name: Install jenkins
+  hosts: jenkins
+  become: true
+  tasks:
+    - name: download jenkins repo
+      get_url:
+        url: https://pkg.jenkins.io/rpm-stable/jenkins.repo
+        dest: /etc/yum.repos.d/jenkins.repo
+
+    - name: donwload jenkins rpms and dep
+      package:
+        name:
+          - fontconfig
+          - java-21-openjdk
+          - jenkins
+          - git
+        state: latest
+
+    - name: start and enable service
+      service:
+        name: jenkins
+        state: started
+        enabled: true
+
+    - name: extract jenkins admin password
+      shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+      register: initial_password
+
+
+    - name: print the msg
+      debug:
+        msg: "initial password: {{initial_password.stdout_lines}}, visit        http://{{ansible_facts['default_ipv4']['address']}}:8080"
