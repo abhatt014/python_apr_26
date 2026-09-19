@@ -1,0 +1,45 @@
+---
+- name: Install and Configure Docker
+  hosts: testing
+  vars:
+    # Change this to the specific user you want to add to the docker group
+    target_user: "student"
+  tasks:
+    - name: Add Docker CE repository
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+    - name: Install Docker CE and plugins
+      ansible.builtin.dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+          - git
+        state: present
+
+    - name: Enable and start Docker and Containerd services
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        enabled: yes
+        state: started
+      loop:
+        - docker
+        - containerd
+
+    - name: Ensure 'docker' group exists
+      ansible.builtin.group:
+        name: docker
+        state: present
+
+    - name: Add user to the docker group
+      ansible.builtin.user:
+        name: "{{ target_user }}"
+        groups: docker
+        append: yes
+
+    - name: ask user to run newgrp command
+      debug:
+        msg: "Install success, now run newgrp docker as student manually"
